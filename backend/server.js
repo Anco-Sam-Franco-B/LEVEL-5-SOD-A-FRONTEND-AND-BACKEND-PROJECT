@@ -62,6 +62,23 @@ app.post('/create', (req, res)=>{
     })
 })
 
+//route to delete student by ID
+app.delete('/delete/:id', (req, res)=>{
+    const  { id }=req.params
+    //delete student query
+    con.query(`DELETE FROM student WHERE id='${id}'`, (err)=>{
+        if(err){
+            return res.status(500).json({
+                message: 'Internal Server Error',
+                errorMessage: err.message
+            })
+        }
+        return res.status(200).json({
+            message: 'Student record deleted successfully!'
+        })
+    })
+})
+
 //starting server
 app.listen(port, ()=>{
     console.log(`Server is running on port ${port}`)
