@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
+import api from '../api/axios'
  
 function Students() {
     const [students, setStudents]=useState([])
     useEffect(()=>{
-      axios.get('http://localhost:8000/students')
+      api.get('/students')
       .then(res=>{
         // alert(res.data.message)
-        setStudents(res.data.result)
+        setStudents(res.data.result) 
       })
       .catch(err=>{
         console.log(err.response)
-        alert('Failed to fetched')
+        alert('Failed to fetch student data \n' + (err.response?.data?.errorMessage || err.message))
       })
-    }, [students])
+    }, [])
     const handeleDelete=(id)=>{
-        axios.delete(`http://localhost:8000/delete/${id}`)
+        api.delete(`/delete/${id}`)
         .then(res=>{
           alert(res.data.message)
           setStudents(students.filter((student)=>student.id != id))
         })
         .catch(err=>{
           console.log(err.response)
-          alert(err.response.data.errorMessage)
+          alert(err.response?.data?.errorMessage || 'Failed to delete')
         })
     }
   return (
@@ -45,7 +45,7 @@ function Students() {
               {
                 students.map((data, index)=>(
                   <tr key={index}>
-                    <td className='p-1'>{index +  1}</td>
+                    <td className='p-1'>{index + 1}</td>
                     <td className='p-1'>{data.fname }</td>
                     <td className='p-1'>{data.lname}</td>
                     <td className='p-1'>{data.email}</td>
